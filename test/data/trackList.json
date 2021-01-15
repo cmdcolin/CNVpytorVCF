@@ -1,0 +1,51 @@
+{
+  "formatVersion": 1,
+  "plugins": ["CNVpytorVCF"],
+  "tracks": [
+    {
+      "category": "Reference sequence",
+      "chunkSize": 20000,
+      "key": "Reference sequence",
+      "label": "DNA",
+      "seqType": "dna",
+      "storeClass": "JBrowse/Store/Sequence/StaticChunked",
+      "type": "SequenceTrack",
+      "urlTemplate": "seq/refSeqs.json"
+    },
+
+    {
+      "category": "From CNVpytorVCF",
+      "urlTemplate": "inputVcfs/HepG2.vcf.gz",
+      "storeClass": "CNVpytorVCF/Store/SeqFeature/RDSegmentation",
+      "type": "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
+      "label": "HepG2 RD",
+      "chunkSizeLimit": 100000000,
+      "autoscale": "local",
+      "noFill": true,
+      "gcContent": "gc/hg19.100000.gc",
+      "urlTemplates": [
+        { "name": "sample", "color": "grey" },
+        { "name": "sample_GC", "color": "black" },
+        { "name": "sample_meanshift", "color": "red" },
+        { "name": "sample_call", "color": "green" }
+      ]
+    },
+    {
+      "category": "From CNVpytorVCF",
+      "urlTemplate": "inputVcfs/HepG2.vcf.gz",
+      "storeClass": "CNVpytorVCF/Store/SeqFeature/BAFview",
+      "type1": "JBrowse/View/Track/Wiggle/XYPlot",
+      "type": "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
+      "label": "HepG2 BAF",
+      "chunkSizeLimit": 100000000,
+      "max_score": 1,
+      "noFill": true,
+      "GenotypeField": "AD",
+      "urlTemplates": [
+        { "name": "sample", "color": "red", "nonCont": true },
+        { "name": "sample_BAF", "color": "blue", "nonCont": true},
+        { "name": "sample_MIN", "color": "red", "nonCont": true}
+      ]
+    }
+  ]
+}
