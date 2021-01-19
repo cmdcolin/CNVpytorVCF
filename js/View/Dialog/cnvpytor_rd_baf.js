@@ -196,7 +196,6 @@ define([
         },
       }).placeAt(panel4);
 
-
       // bin size select
 
       const flex6 = dojo.create(
@@ -211,7 +210,21 @@ define([
         panel6,
       );
       var binSize = new TextBox({ value: 100000, width: "5em" }).placeAt(panel6);
+      
 
+      // Default Track name 
+      const flex7 = dojo.create(
+        "div",
+        { style: { display: "flex", padding: "1px"} },
+        subcontainer,
+      );
+      const panel7 = dojo.create("div", { style: { padding: "1px" } }, flex7);
+      dojo.create(
+        "snan",
+        { innerHTML: "Track Name", style: {margin: "0 5px 0 0"} },
+        panel7,
+      );
+      var TrackName = new TextBox({ value: "RD", width: "5em" }).placeAt(panel7);
 
       this.sampleIndex = sampleIndex;
       // these names correspond with the SimpleFeature source field in
@@ -274,10 +287,13 @@ define([
           }
           var storeName = this.browser.addStoreConfig(undefined, storeConf);
           storeConf.name = storeName;
+
+          track_name = TrackName.value ? TrackName.value : 'RD';
+
           var searchTrackConfig = {
             type: "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
             label: "search_track_" + i++,
-            key: "Testing",
+            key: track_name,
             store: storeName,
             urlTemplates,
           };

@@ -14,7 +14,9 @@ tar xzf 1.16.8-release.tar.gz
 # Rename
 mv jbrowse-1.16.8-release jbrowse
 ```
-My plugin install
+**Plugin install:** To install a JBrowse plugin, copy the plugin in the JBrowse plugin directory 
+
+
 ```
 cd plugins
 git clone https://github.com/arpanda/CNVpytorCNV.git

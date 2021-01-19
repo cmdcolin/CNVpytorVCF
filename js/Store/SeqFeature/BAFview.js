@@ -46,6 +46,7 @@ define([
     constructor(args) {
       this.sample = args.sample || 0;
       this.binSize = args.binSize || 100000;
+      this.variantFilter = args.variantFilter ||  'PASS';
       this.featureCache = new AbortablePromiseCache({
         cache: new LRU({
           maxSize: 20,
@@ -80,7 +81,11 @@ define([
           const AD = format.indexOf("AD");
           const GT = format.indexOf("GT");
           const featureBin = Math.max(Math.floor(start / binSize), 0);
-
+          
+          const filter = fields[6];
+          if(filter != this.variantFilter){
+            return
+          }
           if (!bins[featureBin]) {
             bins[featureBin] = {
               score: 0,

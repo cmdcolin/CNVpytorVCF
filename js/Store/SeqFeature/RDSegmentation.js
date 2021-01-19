@@ -112,8 +112,8 @@ define([
           this.fileBlob,
           this.sample,
         );
-        globalCache.set(`${this.fileBlob}`, { mean, sd });
-        console.log("calculated global chr mean,sd", mean);
+        globalCache.set(`${this.fileBlob}`, { mean, sd, gcRD });
+        // console.log("calculated global chr mean,sd", mean);
         // console.log('globalgcrd', gcRD);
         globalAverage = mean;
         globalSd = sd;
@@ -200,8 +200,10 @@ define([
           Math.floor(start / (binSize * binFactor)),
           0,
         );
-
+        
+        //console.log(featureBin);
         const gcVal = chrGc[featureBin] ? chrGc[featureBin].gcContent : 0;
+        // console.log(featureBin, gcVal, globalgcRD);
 
         const meanScoreForGcBin = globalgcRD[gcVal];
         if (sample.bin_score == 0) {
