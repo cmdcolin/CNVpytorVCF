@@ -39,10 +39,10 @@ export class GetFit {
   fit_data(data_type) {
     let chr_score;
     if (data_type != "gc") {
-      console.log(" normal rd");
+      // console.log(" normal rd");
       chr_score = this.get_all_normal_rd();
     } else {
-      console.log(" gc rd");
+      // console.log(" gc rd");
       chr_score = this.get_all_gc_rd();
     }
     const chr_mean_rd = this.getMean(chr_score);

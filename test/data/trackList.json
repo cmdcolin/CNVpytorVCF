@@ -41,7 +41,7 @@
       "max_score": 1,
       "noFill": true,
       "GenotypeField": "AD",
-      "variantFilter": "PASSS",
+      "variantFilter": "PASS",
       "urlTemplates": [
         { "name": "sample", "color": "red", "nonCont": true },
         { "name": "sample_BAF", "color": "blue", "nonCont": true},

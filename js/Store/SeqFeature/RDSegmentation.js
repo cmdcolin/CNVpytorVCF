@@ -200,8 +200,7 @@ define([
           Math.floor(start / (binSize * binFactor)),
           0,
         );
-        
-        //console.log(featureBin);
+
         const gcVal = chrGc[featureBin] ? chrGc[featureBin].gcContent : 0;
         // console.log(featureBin, gcVal, globalgcRD);
 
@@ -215,7 +214,7 @@ define([
 
       await test_method(bins, globalAverage, globalSd);
 
-      console.log(bins);
+      // console.log(bins);
       const results = {
         average: globalAverage,
         bins,
