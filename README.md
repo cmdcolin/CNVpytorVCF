@@ -2,7 +2,7 @@
 CNVpytor plugin for JBrowse
 
 
-### Demo example for CNVpytor export and CNVpytorVCF plugin
+## Demo example for CNVpytor export and CNVpytorVCF plugin
 Demo page with Hg19 reference: https://abyzovlab.github.io/CNVpytorVCF/JBrowse/
 #### CNVpytor export
 Read depth and BAF analysis is done for HepG2 genome using CNVpytor and both BAM and VCF file are used here. Three different bin size (i.e.; 1K, 10K, 100K) is used for detailed understanding. In the JBrowse page, it automatically selects the bin size based on the length of the selected region.
