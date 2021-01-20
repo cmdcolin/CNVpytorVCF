@@ -238,8 +238,10 @@ define([
       new Button({
         label: "Submit",
         onClick: () => {
+
           const conf = this.browser.resolveUrl(
             this.browser.config.dataRoot + "/gc/" + "hg19.100000.gc",
+            this.browser.config.baseUrl + "/plugins/CNVpytorVCF/test/data/gc/" + "hg19.100000.gc",
           );
 
           // if they passed a URL, use the search box

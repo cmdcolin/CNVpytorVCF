@@ -180,8 +180,9 @@ define([
       finishedCallback,
       errorCallback,
     ) {
-      // testing part
 
+      // testing part
+      /* SNP BAF view part
       this.inherited(arguments, [
         query,
         feature => {
@@ -217,7 +218,7 @@ define([
           featureCallback(sample_data);
         },
       ]);
-
+       */
       // testing part
       try {
         const { bins } = await this.featureCache.get(query.ref, query);
