@@ -1,0 +1,140 @@
+{
+  "formatVersion": 1,
+  "plugins": ["CNVpytorVCF", "MultiBigWig", "MultiScaleBigWig"],
+  "tracks": [
+    {
+      "category": "Reference sequence",
+      "chunkSize": 20000,
+      "key": "Reference sequence",
+      "label": "DNA",
+      "seqType": "dna",
+      "storeClass": "JBrowse/Store/Sequence/StaticChunked",
+      "type": "SequenceTrack",
+      "urlTemplates": "seq/{refseq_dirpath}/{refseq}-"
+    },
+    {
+      "category": "From CNVpytor Export",
+      "autoscale": "local",
+      "storeClass": "MultiBigWig/Store/SeqFeature/MultiBigWig",
+      "showTooltips": true,
+      "showLabels": true,
+      "clickTooltips": true,
+      "max_score": 140000,
+      "min_score": 0,
+      "key": "HepG2 Read Depth (Export)",
+      "label": "RD HepG2_WGS",
+      "type": "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
+      "useStdDev": true,
+      "urlTemplates": [
+        {
+          "storeClass": "MultiScaleBigWig/Store/SeqFeature/MultiScaleBigWig",
+          "scales": {
+            "100000": "bw/HepG2_WGS/his_rd_p_100000.bw"
+          },
+          "name": "HepG2_WGS_RD",
+          "color": "gray"
+        },
+        {
+          "storeClass": "MultiScaleBigWig/Store/SeqFeature/MultiScaleBigWig",
+          "scales": {
+            "100000": "bw/HepG2_WGS/his_rd_p_100000_GC.bw"
+          },
+          "name": "HepG2_WGS_RD_GC",
+          "color": "black"
+        },
+        {
+          "storeClass": "MultiScaleBigWig/Store/SeqFeature/MultiScaleBigWig",
+          "scales": {
+            "100000": "bw/HepG2_WGS/his_rd_p_100000_partition_GC.bw"
+          },
+          "name": "HepG2_WGS_RD partition_GC",
+          "color": "red"
+        },
+        {
+          "storeClass": "MultiScaleBigWig/Store/SeqFeature/MultiScaleBigWig",
+          "scales": {
+            "100000": "bw/HepG2_WGS/his_rd_p_100000_partition_GC_merge.bw"
+          },
+          "name": "HepG2_WGS_RD call_GC",
+          "color": "green"
+        }
+      ]
+    },
+    {
+      "category": "From CNVpytor Export",
+      "autoscale": "local",
+      "storeClass": "MultiBigWig/Store/SeqFeature/MultiBigWig",
+      "showTooltips": true,
+      "showLabels": true,
+      "clickTooltips": true,
+      "max_score": 1,
+      "key": "HepG2 BAF (Export)",
+      "label": "SNP HepG2_WGS",
+      "type": "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
+      "urlTemplates": [
+        {
+          "storeClass": "MultiScaleBigWig/Store/SeqFeature/MultiScaleBigWig",
+          "scales": {
+            "100000": "bw/HepG2_WGS/snp_baf_100000_mask.bw"
+          },
+          "name": "SNP baf_mask",
+          "color": "gray",
+          "nonCont": true
+        },
+        {
+          "storeClass": "MultiScaleBigWig/Store/SeqFeature/MultiScaleBigWig",
+          "scales": {
+            "100000": "bw/HepG2_WGS/snp_i1_100000_mask_offset0.5.bw"
+          },
+          "name": "SNP i1_mask0.5",
+          "color": "red",
+          "nonCont": true
+        },
+        {
+          "storeClass": "MultiScaleBigWig/Store/SeqFeature/MultiScaleBigWig",
+          "scales": {
+            "100000": "bw/HepG2_WGS/snp_i1_100000_mask_offset-0.5.bw"
+          },
+          "name": "SNP i1_mask-0.5",
+          "color": "red",
+          "nonCont": true
+        }
+      ]
+    },
+    {
+      "category": "From CNVpytorVCF (on fly calculation)",
+      "urlTemplate": "../plugins/CNVpytorVCF/test/data/inputVcfs/HepG2.vcf.gz",
+      "storeClass": "CNVpytorVCF/Store/SeqFeature/RDSegmentation",
+      "type": "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
+      "label": "HepG2 Read Depth (on-fly)",
+      "chunkSizeLimit": 100000000,
+      "autoscale": "local",
+      "noFill": true,
+      "gcContent": "../plugins/CNVpytorVCF/test/data/gc/hg19.100000.gc",
+      "urlTemplates": [
+        { "name": "sample", "color": "grey" },
+        { "name": "sample_GC", "color": "black" },
+        { "name": "sample_meanshift", "color": "red" },
+        { "name": "sample_call", "color": "green" }
+      ]
+    },
+    {
+      "category": "From CNVpytorVCF (on fly calculation)",
+      "urlTemplate": "../plugins/CNVpytorVCF/test/data/inputVcfs/HepG2.vcf.gz",
+      "storeClass": "CNVpytorVCF/Store/SeqFeature/BAFview",
+      "type1": "JBrowse/View/Track/Wiggle/XYPlot",
+      "type": "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
+      "label": "HepG2 BAF (on-fly)",
+      "chunkSizeLimit": 100000000,
+      "max_score": 1,
+      "noFill": true,
+      "GenotypeField": "AD",
+      "variantFilter": "PASS",
+      "urlTemplates": [
+        { "name": "sample", "color": "red", "nonCont": true },
+        { "name": "sample_BAF", "color": "blue", "nonCont": true},
+        { "name": "sample_MIN", "color": "red", "nonCont": true}
+      ]
+    }
+  ]
+}
