@@ -27,7 +27,7 @@ define([
   dijitFocus,
   FileBlob,
   XHRBlob,
-  BlobFilehandleWrapper,
+  BlobFilehandleWrapper
 ) {
   return declare(null, {
     constructor: function (args) {
@@ -50,19 +50,19 @@ define([
       var subcontainer = dojo.create(
         "div",
         { style: { padding: "20px" } },
-        container,
+        container
       );
 
       const flex = dojo.create(
         "div",
         { style: { display: "flex", border: "1px solid black" } },
-        subcontainer,
+        subcontainer
       );
       const panel1 = dojo.create("div", { style: { padding: "10px" } }, flex);
       dojo.create(
         "p",
         { innerHTML: "Option 1: URL for a VCF.gz file (tabixed VCF)" },
-        panel1,
+        panel1
       );
 
       var searchBox = new TextBox().placeAt(panel1);
@@ -73,15 +73,14 @@ define([
           innerHTML:
             "Option 2: Open VCF.gz and VCF.gz.tbi file from local computer",
         },
-        panel2,
+        panel2
       );
 
       var fileBox = dojo.create(
         "input",
         { type: "file", multiple: "multiple" },
-        panel2,
+        panel2
       );
-
 
       this.searchBox = searchBox;
       this.fileBox = fileBox;
@@ -93,14 +92,17 @@ define([
       // Reference genome set
       const flex3 = dojo.create(
         "div",
-        { style: { display: "flex", padding: "2px"} },
-        subcontainer,
+        { style: { display: "flex", padding: "2px" } },
+        subcontainer
       );
       const panel3 = dojo.create("div", { style: { padding: "1px" } }, flex3);
       dojo.create(
         "span",
-        { innerHTML: "Reference genome (used to calibrate GC):", style: {margin: "0 5px 0 0"}},
-        panel3,
+        {
+          innerHTML: "Reference genome (used to calibrate GC):",
+          style: { margin: "0 5px 0 0" },
+        },
+        panel3
       );
 
       new Select({
@@ -115,29 +117,29 @@ define([
       // Select sample
       const flex4 = dojo.create(
         "div",
-        { style: { display: "flex", padding: "1px"} },
-        subcontainer,
+        { style: { display: "flex", padding: "1px" } },
+        subcontainer
       );
       const panel4 = dojo.create("div", { style: { padding: "1px" } }, flex4);
 
       dojo.create(
         "snan",
-        { innerHTML: "Sample index", style: {margin: "0 5px 0 0"} },
-        panel4,
+        { innerHTML: "Sample index", style: { margin: "0 5px 0 0" } },
+        panel4
       );
       var sampleIndex = new TextBox({ value: 0, width: "5em" }).placeAt(panel4);
 
       dojo.create(
         "snan",
-        { innerHTML: "or ", style: {margin: "0 5px 0 5px"} },
-        panel4,
+        { innerHTML: "or ", style: { margin: "0 5px 0 5px" } },
+        panel4
       );
 
       // select sample panel
       const flex5 = dojo.create(
         "div",
-        { style: { display: "flex", padding: "1px"} },
-        subcontainer,
+        { style: { display: "flex", padding: "1px" } },
+        subcontainer
       );
       const panel5 = dojo.create("div", { style: { padding: "1px" } }, flex5);
 
@@ -147,12 +149,16 @@ define([
           let tabixFile;
           if (this.searchBox.value) {
             tabixFile = new TabixIndexedFile({
-              filehandle: new XHRBlob(this.searchBox.value, {
-                expectRanges: true,
-              }),
-              tbiFilehandle: new XHRBlob(this.searchBox.value + ".tbi", {
-                expectRanges: true,
-              }),
+              filehandle: new BlobFilehandleWrapper(
+                new XHRBlob(this.searchBox.value, {
+                  expectRanges: true,
+                })
+              ),
+              tbiFilehandle: new BlobFilehandleWrapper(
+                new XHRBlob(this.searchBox.value + ".tbi", {
+                  expectRanges: true,
+                })
+              ),
             });
           } else if (this.fileBox.files.length) {
             let tbi = 0;
@@ -168,20 +174,21 @@ define([
             }
             tabixFile = new TabixIndexedFile({
               filehandle: new BlobFilehandleWrapper(
-                new FileBlob(this.fileBox.files[vcf]),
+                new FileBlob(this.fileBox.files[vcf])
               ),
               tbiFilehandle: new BlobFilehandleWrapper(
-                new FileBlob(this.fileBox.files[tbi]),
+                new FileBlob(this.fileBox.files[tbi])
               ),
             });
           }
 
           if (tabixFile) {
             let vcfParser = new VCF({ header: await tabixFile.getHeader() });
+            panel5.innerHTML = "";
             dojo.create(
               "span",
-              { innerHTML: "Select sample:", style: {margin: "0 5px 0 0"}},
-              panel5,
+              { innerHTML: "Select sample:", style: { margin: "0 5px 0 0" } },
+              panel5
             );
 
             this.sampleSelectBox = new Select({
@@ -200,31 +207,34 @@ define([
 
       const flex6 = dojo.create(
         "div",
-        { style: { display: "flex", padding: "1px"} },
-        subcontainer,
+        { style: { display: "flex", padding: "1px" } },
+        subcontainer
       );
       const panel6 = dojo.create("div", { style: { padding: "1px" } }, flex6);
       dojo.create(
         "snan",
-        { innerHTML: "Bin Size", style: {margin: "0 5px 0 0"} },
-        panel6,
+        { innerHTML: "Bin Size", style: { margin: "0 5px 0 0" } },
+        panel6
       );
-      var binSize = new TextBox({ value: 100000, width: "5em" }).placeAt(panel6);
-      
+      var binSize = new TextBox({ value: 100000, width: "5em" }).placeAt(
+        panel6
+      );
 
-      // Default Track name 
+      // Default Track name
       const flex7 = dojo.create(
         "div",
-        { style: { display: "flex", padding: "1px"} },
-        subcontainer,
+        { style: { display: "flex", padding: "1px" } },
+        subcontainer
       );
       const panel7 = dojo.create("div", { style: { padding: "1px" } }, flex7);
       dojo.create(
         "snan",
-        { innerHTML: "Track Name", style: {margin: "0 5px 0 0"} },
-        panel7,
+        { innerHTML: "Track Name", style: { margin: "0 5px 0 0" } },
+        panel7
       );
-      var TrackName = new TextBox({ value: "RD", width: "5em" }).placeAt(panel7);
+      var TrackName = new TextBox({ value: "RD", width: "5em" }).placeAt(
+        panel7
+      );
 
       this.sampleIndex = sampleIndex;
       // these names correspond with the SimpleFeature source field in
@@ -238,10 +248,11 @@ define([
       new Button({
         label: "Submit",
         onClick: () => {
-
           const conf = this.browser.resolveUrl(
             // this.browser.config.dataRoot + "/gc/" + "hg19.100000.gc",
-            this.browser.config.baseUrl + "/plugins/CNVpytorVCF/test/data/gc/" + "hg19.100000.gc",
+            this.browser.config.baseUrl +
+              "/plugins/CNVpytorVCF/test/data/gc/" +
+              "hg19.100000.gc"
           );
 
           // if they passed a URL, use the search box
@@ -274,7 +285,7 @@ define([
             var storeConf = {
               browser: this.browser,
               refSeq: this.browser.refSeq,
-              binSize : binSize.value,
+              binSize: binSize.value,
               sample: +this.sampleIndex.value || 0,
               type: "CNVpytorVCF/Store/SeqFeature/RDSegmentation",
               gcContent: conf,
@@ -290,7 +301,7 @@ define([
           var storeName = this.browser.addStoreConfig(undefined, storeConf);
           storeConf.name = storeName;
 
-          track_name = TrackName.value ? TrackName.value : 'RD';
+          track_name = TrackName.value ? TrackName.value : "RD";
 
           var searchTrackConfig = {
             type: "MultiBigWig/View/Track/MultiWiggle/MultiXYPlot",
@@ -330,7 +341,7 @@ define([
           setTimeout(function () {
             dialog.destroyRecursive();
           }, 500);
-        }),
+        })
       );
     },
 
@@ -344,19 +355,19 @@ define([
       var subcontainer = dojo.create(
         "div",
         { style: { padding: "20px" } },
-        container,
+        container
       );
       const flex = dojo.create(
         "div",
         { style: { display: "flex", border: "1px solid black" } },
-        subcontainer,
+        subcontainer
       );
 
       const panel1 = dojo.create("div", { style: { padding: "10px" } }, flex);
       dojo.create(
         "p",
         { innerHTML: "Option 1: URL for a VCF.gz file (tabixed VCF)" },
-        panel1,
+        panel1
       );
 
       var searchBox = new TextBox().placeAt(panel1);
@@ -368,14 +379,13 @@ define([
           innerHTML:
             "Option 2: Open VCF.gz and VCF.gz.tbi file from local computer",
         },
-        panel2,
+        panel2
       );
       var fileBox = dojo.create(
         "input",
         { type: "file", multiple: "multiple" },
-        panel2,
+        panel2
       );
-
 
       this.searchBox = searchBox;
       this.fileBox = fileBox;
@@ -383,29 +393,29 @@ define([
       // sample index selection
       const flex4 = dojo.create(
         "div",
-        { style: { display: "flex", padding: "1px"} },
-        subcontainer,
+        { style: { display: "flex", padding: "1px" } },
+        subcontainer
       );
       const panel4 = dojo.create("div", { style: { padding: "1px" } }, flex4);
 
       dojo.create(
         "snan",
-        { innerHTML: "Sample index", style: {margin: "0 5px 0 0"} },
-        panel4,
+        { innerHTML: "Sample index", style: { margin: "0 5px 0 0" } },
+        panel4
       );
       var sampleIndex = new TextBox({ value: 0, width: "5em" }).placeAt(panel4);
 
       dojo.create(
         "snan",
-        { innerHTML: "or ", style: {margin: "0 5px 0 5px"} },
-        panel4,
+        { innerHTML: "or ", style: { margin: "0 5px 0 5px" } },
+        panel4
       );
 
       // select sample panel
       const flex5 = dojo.create(
         "div",
-        { style: { display: "flex", padding: "1px"} },
-        subcontainer,
+        { style: { display: "flex", padding: "1px" } },
+        subcontainer
       );
       const panel5 = dojo.create("div", { style: { padding: "1px" } }, flex5);
 
@@ -415,12 +425,16 @@ define([
           let tabixFile;
           if (this.searchBox.value) {
             tabixFile = new TabixIndexedFile({
-              filehandle: new XHRBlob(this.searchBox.value, {
-                expectRanges: true,
-              }),
-              tbiFilehandle: new XHRBlob(this.searchBox.value + ".tbi", {
-                expectRanges: true,
-              }),
+              filehandle: new BlobFilehandleWrapper(
+                new XHRBlob(this.searchBox.value, {
+                  expectRanges: true,
+                })
+              ),
+              tbiFilehandle: new BlobFilehandleWrapper(
+                new XHRBlob(this.searchBox.value + ".tbi", {
+                  expectRanges: true,
+                })
+              ),
             });
           } else if (this.fileBox.files.length) {
             let tbi = 0;
@@ -436,20 +450,21 @@ define([
             }
             tabixFile = new TabixIndexedFile({
               filehandle: new BlobFilehandleWrapper(
-                new FileBlob(this.fileBox.files[vcf]),
+                new FileBlob(this.fileBox.files[vcf])
               ),
               tbiFilehandle: new BlobFilehandleWrapper(
-                new FileBlob(this.fileBox.files[tbi]),
+                new FileBlob(this.fileBox.files[tbi])
               ),
             });
           }
 
           if (tabixFile) {
             let vcfParser = new VCF({ header: await tabixFile.getHeader() });
+            panel5.innerHTML = "";
             dojo.create(
               "span",
-              { innerHTML: "Select sample:", style: {margin: "0 5px 0 0"}},
-              panel5,
+              { innerHTML: "Select sample:", style: { margin: "0 5px 0 0" } },
+              panel5
             );
 
             this.sampleSelectBox = new Select({
@@ -464,21 +479,22 @@ define([
         },
       }).placeAt(panel4);
 
-
       // Bin size selection
 
       const flex6 = dojo.create(
         "div",
-        { style: { display: "flex", padding: "1px"} },
-        subcontainer,
+        { style: { display: "flex", padding: "1px" } },
+        subcontainer
       );
       const panel6 = dojo.create("div", { style: { padding: "1px" } }, flex6);
       dojo.create(
         "snan",
-        { innerHTML: "Bin Size", style: {margin: "0 5px 0 0"} },
-        panel6,
+        { innerHTML: "Bin Size", style: { margin: "0 5px 0 0" } },
+        panel6
       );
-      var binSize = new TextBox({ value: 100000, width: "5em" }).placeAt(panel6);
+      var binSize = new TextBox({ value: 100000, width: "5em" }).placeAt(
+        panel6
+      );
 
       this.sampleIndex = sampleIndex;
       this.binSize = binSize;
@@ -496,7 +512,7 @@ define([
         label: "Submit",
         onClick: () => {
           const conf = this.browser.resolveUrl(
-            this.browser.config.dataRoot + "/gc/" + "hg19.100000.gc",
+            this.browser.config.dataRoot + "/gc/" + "hg19.100000.gc"
           );
 
           const sampleIndex = this.sampleSelectBox
@@ -591,7 +607,7 @@ define([
           setTimeout(function () {
             dialog.destroyRecursive();
           }, 500);
-        }),
+        })
       );
     },
   });
