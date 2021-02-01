@@ -4,6 +4,9 @@ import { unzip } from "@gmod/bgzf-filehandle";
 import { Partition } from "./MeanShiftUtil";
 import { GetFit } from "./GenerelUtil";
 import { range_function, histogram, fit_normal } from "./GenerelUtil";
+var zlib = require("zlib");
+
+const { Readable } = require("stream");
 
 function getMean(data) {
   return (
@@ -13,13 +16,24 @@ function getMean(data) {
   );
 }
 
+function bufferToStream(binary) {
+  const readableInstanceStream = new Readable({
+    read() {
+      this.push(binary);
+      this.push(null);
+    },
+  });
+
+  return readableInstanceStream;
+}
+
 function getSD(data) {
   let m = getMean(data);
   return Math.sqrt(
     data.reduce(function (sq, n) {
       return sq + (n - m) * (n - m);
     }, 0) /
-      (data.length - 1),
+      (data.length - 1)
   );
 }
 
@@ -74,7 +88,7 @@ define([
       }
       const text = await result.text();
       const refs = {};
-      text.split("\n").forEach(row => {
+      text.split("\n").forEach((row) => {
         if (row.trim() !== "") {
           const [refName, start, gcContent, gcCount, atCount] = row.split("\t");
           if (!refs[refName]) {
@@ -110,7 +124,7 @@ define([
       } else {
         const { mean, sd, gcRD } = await this.getAvgAndSD(
           this.fileBlob,
-          this.sample,
+          this.sample
         );
         globalCache.set(`${this.fileBlob}`, { mean, sd, gcRD });
         // console.log("calculated global chr mean,sd", mean);
@@ -121,7 +135,7 @@ define([
       }
 
       const regularizedReferenceName = this.browser.regularizeReferenceName(
-        query.ref,
+        query.ref
       );
 
       // let binSize = 100000;
@@ -157,7 +171,7 @@ define([
           bins[featureBin].sum_score += finalScore;
           bins[featureBin].count++;
           bins[featureBin].source = sampleName;
-        },
+        }
       );
 
       var avgbin = [];
@@ -177,7 +191,7 @@ define([
           if (bins[j]) {
             const featureBin = Math.max(
               Math.floor(bins[j].start / (binSize * binFactor)),
-              0,
+              0
             );
 
             avgbin[k].start = featureBin * binSize * binFactor;
@@ -193,12 +207,12 @@ define([
       bins = [];
       bins = avgbin;
 
-      bins.forEach(sample => {
+      bins.forEach((sample) => {
         sample.bin_score = sample.bin_score;
         const start = sample.start;
         const featureBin = Math.max(
           Math.floor(start / (binSize * binFactor)),
-          0,
+          0
         );
 
         const gcVal = chrGc[featureBin] ? chrGc[featureBin].gcContent : 0;
@@ -226,12 +240,12 @@ define([
       query,
       featureCallback,
       finishedCallback,
-      errorCallback,
+      errorCallback
     ) {
       try {
         const { bins, average } = await this.featureCache.get(query.ref, query);
 
-        bins.forEach(feature => {
+        bins.forEach((feature) => {
           if (feature.end > query.start && feature.start < query.end) {
             const sample = feature;
             featureCallback(
@@ -240,7 +254,7 @@ define([
                   score: sample.bin_score,
                   source: "sample",
                 }),
-              }),
+              })
             ),
               featureCallback(
                 new SimpleFeature({
@@ -248,7 +262,7 @@ define([
                     score: sample.gc_corrected,
                     source: "sample_GC",
                   }),
-                }),
+                })
               ),
               featureCallback(
                 new SimpleFeature({
@@ -256,7 +270,7 @@ define([
                     score: sample.corrected_mean,
                     source: "sample_meanshift",
                   }),
-                }),
+                })
               ),
               featureCallback(
                 new SimpleFeature({
@@ -264,7 +278,7 @@ define([
                     score: sample.call_score,
                     source: "sample_call",
                   }),
-                }),
+                })
               );
           }
         });
@@ -283,14 +297,23 @@ define([
       const parser = await this.getParser();
       const samples = parser.samples;
 
-      const results = await blob.readFile("utf8");
-      const textDecoder = new TextDecoder("utf-8");
-      const buffer = await unzip(results);
-      const lines = textDecoder.decode(buffer);
+      const results = await blob.readFile();
+      // const buffer = await unzip(results);
+      const lines = []; //buffer.toString();
+      const inp = bufferToStream(results);
+
+      let reader = inp.pipe(zlib.createGunzip());
+
+      let n = 0;
+      reader.on("data", (line) => {
+        n += 1;
+        if (n < 100) console.log("line: " + n, line.toString());
+      });
+
       let scores = [];
       let chrbin_score = [];
       let feature_score = [];
-      lines.split("\n").forEach(line => {
+      lines.split("\n").forEach((line) => {
         if (line.startsWith("#") || line == "") {
           return;
         }
@@ -361,7 +384,7 @@ define([
       // console.log(fit_info.fit_data());
       // console.log(gcContent);
       for (const gc in gcContent) {
-        var raw_gc = gcContent[gc].filter(x => x > 0 && x < max_rd);
+        var raw_gc = gcContent[gc].filter((x) => x > 0 && x < max_rd);
         //console.log(gc, gcContent[gc]);
         //console.log(raw_gc);
         //const gcMean = getMean(gcContent[gc]);
@@ -375,11 +398,11 @@ define([
       for (const chr in bins) {
         let chrGC = gc[chr];
         //console.log(chr, chrGC);
-        bins[chr].forEach(sample => {
+        bins[chr].forEach((sample) => {
           const start = sample.start;
           const featureBin = Math.max(
             Math.floor(start / (binSize * binFactor)),
-            0,
+            0
           );
           const gcVal = chrGC[featureBin] ? chrGC[featureBin].gcContent : 0;
 
